@@ -17,45 +17,79 @@
     user-select: none;
   }
   h1 {
-    margin: 20px 0 10px;
+    margin: 20px 0 0 0;
     text-shadow: 0 0 10px #8b3dff;
   }
-  #jackpot, #chance {
+  p.instruction {
+    color: #bca1ffcc;
+    font-size: 1rem;
+    font-style: italic;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    text-align: center;
+    max-width: 480px;
+    user-select: none;
+    text-shadow: 0 0 5px #7a5affcc;
+  }
+  #jackpot {
     font-size: 1.5em;
     margin: 8px 0 20px;
     text-shadow: 0 0 10px #a966ff;
   }
+  #chance {
+    font-size: 0.9em;
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #bca1ffcc;
+    text-shadow: 0 0 6px #7a5affcc;
+    user-select: none;
+    z-index: 10;
+  }
   .dice-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(2, 80px);
     gap: 15px;
     margin-bottom: 30px;
   }
   .dice {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     background: #1a1140;
     border-radius: 12px;
     box-shadow: 0 0 20px #9b42ff, 0 0 25px #7a1eff inset;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2.8rem;
-    color: #d9b0ff;
-    font-weight: bold;
     position: relative;
-    transition: box-shadow 0.3s ease;
+    perspective: 600px;
+    cursor: default;
   }
-  .dice.animate {
-    animation: neonGlow 1s ease infinite alternate;
+  .dice img {
+    width: 60px;
+    height: 60px;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #b06aff;
+    animation-fill-mode: forwards;
   }
-  @keyframes neonGlow {
+  .rolling {
+    animation: rollDiceAnim 0.8s ease forwards;
+  }
+  @keyframes rollDiceAnim {
     0% {
-      box-shadow: 0 0 20px #b063ff, 0 0 30px #a454ff inset;
-      color: #f5e0ff;
+      transform: rotateX(0deg) rotateY(0deg);
+      opacity: 1;
+    }
+    50% {
+      transform: rotateX(720deg) rotateY(720deg);
+      opacity: 0.6;
     }
     100% {
-      box-shadow: 0 0 40px #e3a7ff, 0 0 50px #bc7bff inset;
-      color: #fff7ff;
+      transform: rotateX(0deg) rotateY(0deg);
+      opacity: 1;
     }
   }
   .buttons {
@@ -103,16 +137,18 @@
 <body>
 
 <h1>Dé de la fortune</h1>
-<div id="jackpot">Jackpot en cours : 0</div>
-<div id="chance">Chance de gagner à chaque tirage : 0.00077%</div>
+<p class="instruction">Obtiens 6 sur tous tes dés et remporte le Jackpot</p>
 
-<div class="dice-container">
-  <div class="dice" id="dice1">?</div>
-  <div class="dice" id="dice2">?</div>
-  <div class="dice" id="dice3">?</div>
-  <div class="dice" id="dice4">?</div>
-  <div class="dice" id="dice5">?</div>
-  <div class="dice" id="dice6">?</div>
+<div id="jackpot">Jackpot en cours : 0</div>
+<div id="chance">Chance de gagner à chaque tirage : 0.00214%</div>
+
+<div class="dice-container" aria-label="Dés du jeu">
+  <div class="dice" id="dice1"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" alt="Dé face 1"></div>
+  <div class="dice" id="dice2"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" alt="Dé face 1"></div>
+  <div class="dice" id="dice3"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" alt="Dé face 1"></div>
+  <div class="dice" id="dice4"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" alt="Dé face 1"></div>
+  <div class="dice" id="dice5"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" alt="Dé face 1"></div>
+  <div class="dice" id="dice6"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg" alt="Dé face 1"></div>
 </div>
 
 <div class="buttons">
@@ -148,25 +184,47 @@
   let isDrawing = false;
   let quickDrawMode = false;
 
-  // Probabilité de faire 36 (6 dés à 6 faces)
-  // C'est 1 chance sur 6^6 = 1/46656 ≈ 0.00214%
-  // Affichage avec 5 décimales
-  const winProbability = (1 / Math.pow(6, 6)) * 100;
-
+  // Probabilité mathématique de 6 dés à 6 faces donnant la somme 36
+  const winProbability = (1 / Math.pow(6, 6)) * 100; // ≈ 0.00214%
   chanceDisplay.textContent = `Chance de gagner à chaque tirage : ${winProbability.toFixed(5)}%`;
 
-  function rollDiceAnimation(diceEl) {
-    diceEl.classList.add('animate');
+  // URLs des faces de dé (1 à 6)
+  const diceFaces = [
+    "https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/5/5f/Dice-2-b.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b1/Dice-3-b.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/f/fd/Dice-4-b.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/0/08/Dice-5-b.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/2/26/Dice-6-b.svg"
+  ];
+
+  function playRollAnimation(diceImg) {
     return new Promise(resolve => {
+      diceImg.classList.add('rolling');
       setTimeout(() => {
-        diceEl.classList.remove('animate');
+        diceImg.classList.remove('rolling');
         resolve();
       }, 800);
     });
   }
 
   function rollDiceOnce() {
-    return Math.floor(Math.random() * 6) + 1;
+    return Math.floor(Math.random() * 6);
+  }
+
+  async function drawOnce() {
+    // Animation de rotation sur tous les dés
+    await Promise.all(diceEls.map(die => playRollAnimation(die.querySelector('img'))));
+    
+    // Affiche le résultat final
+    let totalScore = 0;
+    diceEls.forEach(die => {
+      const val = rollDiceOnce();
+      die.querySelector('img').src = diceFaces[val];
+      die.querySelector('img').alt = `Dé face ${val + 1}`;
+      totalScore += val + 1;
+    });
+    return totalScore;
   }
 
   async function runDraws(count) {
@@ -178,20 +236,16 @@
     for (let i = 0; i < count; i++) {
       let score;
       if (!quickDrawMode) {
-        await Promise.all(diceEls.map(die => rollDiceAnimation(die)));
+        score = await drawOnce();
+      } else {
+        // Tirage rapide sans animation
         score = 0;
         diceEls.forEach(die => {
           const val = rollDiceOnce();
-          die.textContent = val;
-          score += val;
+          die.querySelector('img').src = diceFaces[val];
+          die.querySelector('img').alt = `Dé face ${val + 1}`;
+          score += val + 1;
         });
-      } else {
-        score = 0;
-        for (let j = 0; j < 6; j++) {
-          const val = rollDiceOnce();
-          diceEls[j].textContent = val;
-          score += val;
-        }
       }
 
       if (score === 36) {
