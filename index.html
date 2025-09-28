@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jeu Machine à Sous TikTok Mobile</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0e6ff;
+    color: #333;
+    text-align: center;
+    margin: 0;
+    padding: 10px;
+  }
+  h1 {
+    font-size: 1.6em;
+    margin-bottom: 10px;
+  }
+  .reels {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    gap: 10px;
+  }
+  .reel {
+    font-size: 8vw;
+    width: 14vw;
+    height: 14vw;
+    background: #e0d4ff;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    transition: transform 0.5s ease;
+  }
+  button {
+    padding: 15px 0;
+    font-size: 5vw;
+    margin: 5px 5px 10px;
+    width: 47%;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background-color: #a080ff;
+    color: white;
+  }
+  #accelerate, #reset {
+    background-color: #7263d4;
+  }
+  #result, #score {
+    font-size: 5vw;
+    margin-top: 10px;
+    min-height: 6vw;
+  }
+</style>
+</head>
+<body>
+
+<h1>Jackpot TikTok Cadeaux</h1>
+
+<div class="reels" id="reels">
+  <div class="reel" id="reel1">🎁</div>
+  <div class="reel" id="reel2">🌌</div>
+  <div class="reel" id="reel3">🌹</div>
+  <div class="reel" id="reel4">🍩</div>
+  <div class="reel" id="reel5">🎉</div>
+</div>
+
+<button id="spin1">Tourner 1 fois</button>
+<button id="spin10">Tourner 10 fois</button>
+<button id="accelerate">Accélérer</button>
+<button id="reset">Réinitialiser</button>
+
+<div id="result"></div>
+<div id="score">Roses accumulées : 0</div>
+
+<script>
+const symbols = [
+  "🎁", "🌌", "🌹", "🍩", "🎉"
+];
+
+let accumulatedRoses = 0;
+let animationSpeed = 500;
+
+function weightedRandomSymbol() {
+  return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+async function animateSpin(finalSymbols) {
+  const reels = [];
+  for(let i=1; i<=5; i++) {
+    reels.push(document.getElementById("reel" + i));
+  }
+
+  for(let i=0; i<10; i++) {
+    for(let r=0; r<reels.length; r++) {
+      reels[r].textContent = weightedRandomSymbol();
+      reels[r].style.transform = i % 2 === 0 ? 'rotate(10deg)' : 'rotate(-10deg)';
+    }
+    await new Promise(r => setTimeout(r, animationSpeed / 10));
+  }
+
+  for(let r=0; r<reels.length; r++) {
+    reels[r].textContent = finalSymbols[r];
+    reels[r].style.transform = 'rotate(0deg)';
+  }
+}
+
+async function play(num) {
+  let wins = 0;
+  for(let i=0; i<num; i++) {
+    const combi = [];
+    for(let j=0; j<5; j++) {
+      combi.push(weightedRandomSymbol());
+    }
+    await animateSpin(combi);
+
+    if(new Set(combi).size === 1) {
+      wins++;
+      accumulatedRoses += 10;
+    }
+  }
+
+  document.getElementById("result").textContent = 
+    `Tours joués : ${num} - Jackpots gagnés : ${wins}`;
+  document.getElementById("score").textContent = 
+    `Roses accumulées : ${accumulatedRoses}`;
+}
+
+document.getElementById("spin1").onclick = () => play(1);
+document.getElementById("spin10").onclick = () => play(10);
+document.getElementById("accelerate").onclick = () => {
+  animationSpeed = animationSpeed === 500 ? 100 : 500;
+  document.getElementById("result").textContent = 
+    animationSpeed === 100 ? "Accélération activée" : "Vitesse normale";
+};
+document.getElementById("reset").onclick = () => {
+  accumulatedRoses = 0;
+  document.getElementById("score").textContent = `Roses accumulées : ${accumulatedRoses}`;
+  document.getElementById("result").textContent = "Jeu réinitialisé";
+};
+</script>
+
+</body>
+</html>
