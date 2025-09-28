@@ -3,145 +3,183 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Jeu Machine à Sous TikTok Mobile</title>
+<title>Jackpot TikTok RGB Slot avec pouces perdants</title>
 <style>
   body {
+    margin: 0; padding: 0;
     font-family: Arial, sans-serif;
-    background: #f0e6ff;
-    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
     text-align: center;
-    margin: 0;
-    padding: 10px;
   }
-  h1 {
-    font-size: 1.6em;
-    margin-bottom: 10px;
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(270deg, #ff007c, #00f2ff, #ffe500, #00ff6c, #ff007c);
+    background-size: 200% 200%;
+    animation: waveBG 8s ease-in-out infinite;
+  }
+  @keyframes waveBG {
+    0%,100% {background-position:0 0;}
+    50% {background-position:100% 100%;}
+  }
+  h1 { color: white; margin-bottom: 5px; text-shadow: 1px 1px 5px #000;}
+  h2 {
+    color: white;
+    text-shadow:1px 1px 8px #004466;
+    font-weight: normal;
+    margin: 6px 16px 12px;
+  }
+  .controls {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 10px 0;
+  }
+  .spinbtn {
+    width: 110px;
+    font-size: 1em;
+    background: rgba(60,0,120,0.7);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 0;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    cursor: pointer;
+  }
+  .logo-row, .loser-logos {
+    display: flex; justify-content: center; gap: 14px; margin: 10px 0 15px 0;
+  }
+  .logo-row img, .loser-logos img {
+    height: 56px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.10);
   }
   .reels {
-    display: flex;
-    justify-content: center;
-    margin: 15px 0;
-    gap: 10px;
+    display: flex; justify-content: center; gap: 12px;
+    margin: 18px auto;
+    max-width: 400px;
   }
-  .reel {
-    font-size: 8vw;
-    width: 14vw;
-    height: 14vw;
-    background: #e0d4ff;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    transition: transform 0.5s ease;
+  .reel-img {
+    width: 68px; height: 68px;
+    background: rgba(255,255,255,0.12);
+    border-radius:18px;
+    display:flex;align-items:center;justify-content:center;
+    transition: transform 0.25s, box-shadow 0.25s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
-  button {
-    padding: 15px 0;
-    font-size: 5vw;
-    margin: 5px 5px 10px;
-    width: 47%;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    background-color: #a080ff;
-    color: white;
+  .reel-img.animate {
+    transform: scale(1.23) rotate(16deg);
+    box-shadow: 0 0 18px #fff, 0 2px 18px #00f2ff;
   }
-  #accelerate, #reset {
-    background-color: #7263d4;
-  }
-  #result, #score {
-    font-size: 5vw;
+  .infos {
+    font-size: 1.3em;
+    color:#fff;
+    text-shadow:1px 1px 6px #43007c;
     margin-top: 10px;
-    min-height: 6vw;
   }
 </style>
 </head>
 <body>
 
-<h1>Jackpot TikTok Cadeaux</h1>
+<h1>Jackpot TikTok RGB</h1>
+<h2>Il faut 5 logos identiques pour remporter le jackpot. Chance de gagner : 0.0244% (1 sur 4096)</h2>
 
-<div class="reels" id="reels">
-  <div class="reel" id="reel1">🎁</div>
-  <div class="reel" id="reel2">🌌</div>
-  <div class="reel" id="reel3">🌹</div>
-  <div class="reel" id="reel4">🍩</div>
-  <div class="reel" id="reel5">🎉</div>
+<div class="controls">
+  <button class="spinbtn" onclick="play(1)">Tourner 1 fois</button>
+  <button class="spinbtn" onclick="play(10)">Tourner 10 fois</button>
+  <button class="spinbtn" onclick="play(30)">Tourner 30 fois</button>
+  <button class="spinbtn" onclick="play(100)">Tourner 100 fois</button>
+  <button class="spinbtn" onclick="play(1000)">Tourner 1000 fois</button>
 </div>
 
-<button id="spin1">Tourner 1 fois</button>
-<button id="spin10">Tourner 10 fois</button>
-<button id="accelerate">Accélérer</button>
-<button id="reset">Réinitialiser</button>
+<div class="logo-row" title="Logos Gagnants">
+  <img src="image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/... (ton image galaxy)... " alt="Galaxy">
+  <img src="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABSCAMAAACpjMJq... " alt="J">
+  <img src="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAAnCAMAAADEu64Q... " alt="Ours">
+  <img src="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABSCAMAAACpjMJq... " alt="Rose">
+  <img src="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHoAAABqCAMAAACeZ0f6AA... " alt="Donut">
+</div>
 
-<div id="result"></div>
-<div id="score">Roses accumulées : 0</div>
+<div class="loser-logos" title="Pouces perdants">
+  <img src="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAsVBMVEUAAAD... " alt="Pouce rouge" width="44" height="44" />
+  <img src="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAmVBMVEUAAA... " alt="Pouce vert" width="44" height="44" />
+  <img src="image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAY1BMVEUAAAD... " alt="Pouce jaune" width="44" height="44" />
+</div>
+
+<div class="reels">
+  <div class="reel-img" id="reel1"></div>
+  <div class="reel-img" id="reel2"></div>
+  <div class="reel-img" id="reel3"></div>
+  <div class="reel-img" id="reel4"></div>
+  <div class="reel-img" id="reel5"></div>
+</div>
+
+<div class="infos" id="result"></div>
+<div class="infos" id="score">Jackpot actuel (roses) : 0</div>
 
 <script>
-const symbols = [
-  "🎁", "🌌", "🌹", "🍩", "🎉"
+// Extrait de code du jeu, adaptation JS
+const symbolsData = [
+  {name:"galaxy",url:"image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/... (ton image galaxy)..."},
+  {name:"j",url:"image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABSCAMAAACpjMJq..."},
+  {name:"bear",url:"image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAAnCAMAAADEu64Q..."},
+  {name:"rose",url:"image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABSCAMAAACpjMJq..."},
+  {name:"donut",url:"image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHoAAABqCAMAAACeZ0f6AA..."},
+  {name:"thumb_red",url:"image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrG..."},
+  {name:"thumb_green",url:"image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrG..."},
+  {name:"thumb_yellow",url:"image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrG..."}
 ];
+const symbols = symbolsData.map(s => s.url);
 
 let accumulatedRoses = 0;
-let animationSpeed = 500;
+let animationSpeed = 450;
 
 function weightedRandomSymbol() {
-  return symbols[Math.floor(Math.random() * symbols.length)];
+  return symbols[Math.floor(Math.random() * 5)]; // uniquement 5 symboles gagnants, pas pouce
+}
+
+function setReels(symbolURLs) {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById('reel' + i);
+    el.innerHTML = `<img src="${symbolURLs[i-1]}" style="width:56px; height:56px;">`;
+  }
 }
 
 async function animateSpin(finalSymbols) {
-  const reels = [];
-  for(let i=1; i<=5; i++) {
-    reels.push(document.getElementById("reel" + i));
-  }
-
-  for(let i=0; i<10; i++) {
-    for(let r=0; r<reels.length; r++) {
-      reels[r].textContent = weightedRandomSymbol();
-      reels[r].style.transform = i % 2 === 0 ? 'rotate(10deg)' : 'rotate(-10deg)';
+  for(let t=0; t<12; t++) {
+    let temp = [];
+    for(let r=0; r<5; r++) {
+      temp.push(symbols[Math.floor(Math.random() * 5)]);
+      let el = document.getElementById('reel' + (r+1));
+      el.classList.add('animate');
+      el.innerHTML = `<img src="${temp[r]}" style="width:56px; height:56px;">`;
     }
-    await new Promise(r => setTimeout(r, animationSpeed / 10));
+    await new Promise(r => setTimeout(r, animationSpeed/12));
+    for(let r=0; r<5; r++)
+      document.getElementById('reel' + (r+1)).classList.remove('animate');
   }
-
-  for(let r=0; r<reels.length; r++) {
-    reels[r].textContent = finalSymbols[r];
-    reels[r].style.transform = 'rotate(0deg)';
-  }
+  setReels(finalSymbols);
 }
 
 async function play(num) {
-  let wins = 0;
+  let jackpots = 0;
   for(let i=0; i<num; i++) {
-    const combi = [];
-    for(let j=0; j<5; j++) {
-      combi.push(weightedRandomSymbol());
-    }
+    accumulatedRoses++;  // Le jackpot augmente à chaque tour, qu'importe le résultat
+    let combi = [];
+    for(let j=0; j<5; j++) combi.push(weightedRandomSymbol());
     await animateSpin(combi);
 
-    if(new Set(combi).size === 1) {
-      wins++;
-      accumulatedRoses += 10;
+    const firstSymbol = combi[0];
+    const isJackpot = combi.every(symbol => symbol === firstSymbol);
+
+    if(isJackpot){
+      jackpots++;
     }
   }
-
-  document.getElementById("result").textContent = 
-    `Tours joués : ${num} - Jackpots gagnés : ${wins}`;
-  document.getElementById("score").textContent = 
-    `Roses accumulées : ${accumulatedRoses}`;
+  document.getElementById("result").textContent = `Tours joués : ${num} – Jackpots gagnés : ${jackpots}`;
+  document.getElementById("score").textContent = `Jackpot actuel (roses) : ${accumulatedRoses}`;
 }
-
-document.getElementById("spin1").onclick = () => play(1);
-document.getElementById("spin10").onclick = () => play(10);
-document.getElementById("accelerate").onclick = () => {
-  animationSpeed = animationSpeed === 500 ? 100 : 500;
-  document.getElementById("result").textContent = 
-    animationSpeed === 100 ? "Accélération activée" : "Vitesse normale";
-};
-document.getElementById("reset").onclick = () => {
-  accumulatedRoses = 0;
-  document.getElementById("score").textContent = `Roses accumulées : ${accumulatedRoses}`;
-  document.getElementById("result").textContent = "Jeu réinitialisé";
-};
 </script>
-
 </body>
 </html>
