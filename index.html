@@ -97,6 +97,12 @@
     justify-content: center;
     margin-bottom: 30px;
   }
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
   button {
     background: #3a1a8e;
     border: none;
@@ -111,6 +117,17 @@
   button:hover {
     background: #7a3cff;
     box-shadow: 0 0 20px #db8cff;
+  }
+  .jackpot-bonus {
+    background: #0a4a0a;
+    border: 1px solid #00ff00;
+    border-radius: 6px;
+    color: #00ff00;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    text-shadow: 0 0 8px #00ff00;
+    box-shadow: 0 0 10px #00ff0066, 0 0 5px #00ff0033 inset;
+    user-select: none;
   }
   #message {
     font-size: 1.3rem;
@@ -150,12 +167,29 @@
 </div>
 
 <div class="buttons">
-  <button data-draw="1">1 tirage</button>
-  <button data-draw="10">10 tirages</button>
-  <button data-draw="30">30 tirages</button>
-  <button data-draw="100">100 tirages</button>
-  <button data-draw="1000">1000 tirages</button>
-  <button id="quickDraw">Tirage rapide : OFF</button>
+  <div class="button-container">
+    <button data-draw="1">1 tirage</button>
+    <div class="jackpot-bonus">+1 au jackpot</div>
+  </div>
+  <div class="button-container">
+    <button data-draw="10">10 tirages</button>
+    <div class="jackpot-bonus">+3 au jackpot</div>
+  </div>
+  <div class="button-container">
+    <button data-draw="30">30 tirages</button>
+    <div class="jackpot-bonus">+9 au jackpot</div>
+  </div>
+  <div class="button-container">
+    <button data-draw="100">100 tirages</button>
+    <div class="jackpot-bonus">+30 au jackpot</div>
+  </div>
+  <div class="button-container">
+    <button data-draw="1000">1000 tirages</button>
+    <div class="jackpot-bonus">+300 au jackpot</div>
+  </div>
+  <div class="button-container">
+    <button id="quickDraw">Tirage rapide : OFF</button>
+  </div>
 </div>
 
 <div id="message"></div>
