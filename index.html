@@ -61,12 +61,13 @@
     gap: 15px;
     margin-bottom: 30px;
   }
+  /* Dés blancs + effet néon violet */
   .dice {
     width: 80px;
     height: 80px;
-    background: #1a1140;
+    background: #fff;
     border-radius: 12px;
-    box-shadow: 0 0 20px #9b42ff, 0 0 25px #7a1eff inset;
+    box-shadow: 0 0 25px #a776ff, 0 0 15px #e1c7ff inset, 0 0 10px #9b42ff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,18 +87,9 @@
     animation: rollDiceAnim 0.8s ease forwards;
   }
   @keyframes rollDiceAnim {
-    0% {
-      transform: rotateX(0deg) rotateY(0deg);
-      opacity: 1;
-    }
-    50% {
-      transform: rotateX(720deg) rotateY(720deg);
-      opacity: 0.6;
-    }
-    100% {
-      transform: rotateX(0deg) rotateY(0deg);
-      opacity: 1;
-    }
+    0% { transform: rotateX(0deg) rotateY(0deg); opacity: 1; }
+    50% { transform: rotateX(720deg) rotateY(720deg); opacity: 0.6; }
+    100% { transform: rotateX(0deg) rotateY(0deg); opacity: 1; }
   }
   .buttons {
     display: flex;
@@ -145,7 +137,6 @@
 
 <h1>Dé de la fortune</h1>
 <p class="instruction">Obtiens 6 sur tous tes dés et remporte le Jackpot</p>
-
 <div id="jackpot">Jackpot en cours : 0</div>
 <div id="drawCount">Nombre de tirages effectués : 0</div>
 <div id="chance">Chance de gagner à chaque tirage : 0.00214%</div>
@@ -169,7 +160,6 @@
 </div>
 
 <div id="message"></div>
-
 <div class="neon-background"></div>
 
 <script>
@@ -194,10 +184,9 @@
   let isDrawing = false;
   let quickDrawMode = false;
 
-  const winProbability = (1 / Math.pow(6, 6)) * 100; // ≈ 0.00214%
+  const winProbability = (1 / Math.pow(6, 6)) * 100;
   chanceDisplay.textContent = `Chance de gagner à chaque tirage : ${winProbability.toFixed(5)}%`;
 
-  // URLs des faces de dé (1 à 6)
   const diceFaces = [
     "https://upload.wikimedia.org/wikipedia/commons/1/1b/Dice-1-b.svg",
     "https://upload.wikimedia.org/wikipedia/commons/5/5f/Dice-2-b.svg",
@@ -222,9 +211,7 @@
   }
 
   async function drawOnce() {
-    // Animation de rotation sur tous les dés
     await Promise.all(diceEls.map(die => playRollAnimation(die.querySelector('img'))));
-    // Affiche le résultat final
     let totalScore = 0;
     diceEls.forEach(die => {
       const val = rollDiceOnce();
@@ -248,7 +235,6 @@
       if (!quickDrawMode) {
         score = await drawOnce();
       } else {
-        // Tirage rapide sans animation
         score = 0;
         diceEls.forEach(die => {
           const val = rollDiceOnce();
